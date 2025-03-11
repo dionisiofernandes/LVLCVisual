@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Visualizer</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        canvas {
+            display: block;
+        }
+        #startButton {
+            position: fixed;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
+        }
+        #startButton:hover {
+            background: #444;
+        }
+        #fullscreenButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            font-size: 16px;
+            background: rgba(51, 51, 51, 0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        #fullscreenButton:hover {
+            background: rgba(68, 68, 68, 0.9);
+        }
+        .logo-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 99;
+        }
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container" id="logoContainer">
+        <img src="img/LVLCLOGO.svg" alt="LVLC Logo">
+    </div>
+    <button id="startButton">Start Visualizer</button>
+    <button id="fullscreenButton" style="display: none;">⛶</button>
+    
+    <canvas id="visualizer"></canvas>
+    <script src="visualizer.js"></script>
+    <script>
+        let hideTimeout;
+        const fullscreenBtn = document.getElementById('fullscreenButton');
+        const logoContainer = document.getElementById('logoContainer');
+        let visualizer;
+
+        // Load configuration and check for autoStart
+        fetch('config.json')
+            .then(response => response.json())
+            .then(config => {
+                if (config.autoStart) {
+                    startButton.style.display = 'none';
+                    visualizer = new AudioVisualizer();
+                    visualizer.init();
+                    logoContainer.classList.add('hidden');
+                }
+            })
+            .catch(error => console.error('Error loading config:', error));
+
+        startButton.addEventListener('click', () => {
+            visualizer = new AudioVisualizer();
+            visualizer.init();
+            logoContainer.classList.add('hidden');
+        });
+
+        document.addEventListener('mousemove', () => {
+            fullscreenBtn.style.opacity = '1';
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(() => {
+                fullscreenBtn.style.opacity = '0';
+            }, 2000);
+        });
+
+        const toggleFullscreen = () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                fullscreenBtn.textContent = '⮌';
+            } else {
+                document.exitFullscreen();
+                fullscreenBtn.textContent = '⛶';
+            }
+        };
+
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        const canvas = document.getElementById('visualizer');
+        canvas.addEventListener('dblclick', toggleFullscreen);
+    </script>
+</body>
+</html>

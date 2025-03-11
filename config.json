@@ -1,0 +1,37 @@
+{
+    "displayText": "L\\//C",
+    "showEffectName": false,
+    "showText": true,
+    "autoStart": true,
+    "effectDuration": {
+        "min": 20,
+        "max": 35
+    },
+    "glitchEffects": {
+        "text": {
+            "intensity": 1.0,
+            "frequency": 100,
+            "offsetMultiplier": 1.0
+        },
+        "logo": {
+            "intensity": 0.8,
+            "frequency": 100,
+            "offsetMultiplier": 0.8
+        }
+    },
+    "logo": {
+        "enabled": true,
+        "imageName": "LVLCLOGO.svg",
+        "scale": 0.15,
+        "visibilityInterval": {
+            "enabled": true,
+            "duration": 8000,
+            "hideInterval": 12000,
+            "lowFrequencyTrigger": {
+                "enabled": true,
+                "threshold": 180,
+                "sensitivity": 0.7
+            }
+        }
+    }
+}
